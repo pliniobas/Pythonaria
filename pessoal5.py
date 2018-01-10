@@ -641,17 +641,17 @@ if __name__ == '__main__':
 # =============================================================================
 #%% Decorators
 # =============================================================================
-    
-    def echo_funcname(func):
-        
-        def finterna(*args, **kwargs):
+    from functools import wraps
+   
+    def echo_funcname(func): 
+        @wraps(func) #essa porra é importante para caraleo. <--
+        def finterna(*args, **kwargs): #esse *args e **kwargs sao os args da funcao func. 
             print "Chamando funcao: %s()"  % (func.__name__) #aqui eu executo uma funcao antes de executar a funcao que chamei
 
             a = args[0] + 1 # aqui eu posso modificar o argumento de entrada, no caso estou somando + 1
-            return func(a, **kwargs) #poderia também retornar todos os args return func(*args, **kwargs) 
-        
-#        print('aqui') #O que estiver nessa area, serah execuando quando @wrapear a funcao. Não deve ter nada aqui.
-        return finterna
+            return func(a, **kwargs) #TEM QUE TAMBÉM RETORNAR TODOS OS ARGS E KWARGS return func(*args, **kwargs) 
+#          print('aqui') #O que estiver nessa area, serah execuando quando @wrapear a funcao. Não deve ter nada aqui.
+        return finterna #finterna agora é a func já modificada. 
  
    
     #criando as funcoes wraped
