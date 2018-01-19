@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 """
 Created on Wed May 31 10:57:51 2017
 
@@ -152,62 +153,9 @@ def filter_ascii(x):
     
 #%%
     
-
-#def finderAnti(path,what):
-#    
-#    dirr= []
-#    filee = []
-#    found = []
-#    try:
-#        for aux in os.listdir(path):
-#            if os.path.isdir(path+aux+'/'):
-#                dirr.append(path+aux+'/')
-#                fileTemp,dirTemp,foundTemp = finder(path+aux+'/',what)
-#                filee = filee + fileTemp
-#                dirr = dirr + dirTemp 
-#                found = found + foundTemp
-#                if (path+aux).find(what) >= 0:
-#                    print ('pasta: ' + aux)
-#                    found.append(path+aux)
-#                    pass
-#                pass
-#            elif os.path.isfile(path+aux):
-#                filee.append(path+aux)
-#                if (path+aux).find(what) >= 0:
-#                    datec = os.path.getctime(path+aux)
-#                    datec = datetime.fromtimestamp(datec)
-#                    datem = os.path.getmtime(path+aux)
-#                    datem = datetime.fromtimestamp(datem)
-#                    found.append([path+aux,datec,datem])
-#                    print ('arquivo: ' + path + aux)
-#
-#                    pass
-#                pass
-#            else:
-#                pass
-#            pass
-#        found.sort(key = lambda temp: temp[2], reverse = True)
-#        
-#    except:
-#        print('acesso negado: ' + aux)
-#        pass
-#    
-#        
-#    return(filee,dirr,found)   
-#
-#
-#def finderEx(what,where):
-#    matches = []
-#    for root, dirnames, filenames in os.walk(where):
-#        for filename in fnmatch.filter(filenames, what):
-#            matches.append(os.path.join(root, filename))
-#    return matches
-
-
-
-#%%
-
 def finder(**kwargs):
+    
+#    kwargs = {"where":r"C:\Google Drive\Teste2","what":"*([123456789]).*"}
     import os
     from fnmatch import fnmatch
     import re
@@ -228,29 +176,30 @@ def finder(**kwargs):
     
     for root,dirr,files in os.walk(kwargs['where']):
         for aux in files:
+#            print (aux.decode('iso-8859-1'))
             #Se tiver a key index, grava o indice de todos os arquivos pesquisados
             if kwargs.has_key('index'):
-                index.append(os.path.join(root,aux))
+                index.append(os.path.join(root,aux.decode('iso-8859-1')))
                 pass
             
             #Se tiver a key inside, procura dentro dos arquivos abertos por um match
             if kwargs.has_key('inside'):
                 try:
-                    with open(os.path.join(root,aux),'r') as f:
+                    with open(os.path.join(root,aux.decode('iso-8859-1')),'r') as f:
                         data = f.read()
                         f.close()
                         pass
                     if r.search(data) is not None:
-                        din.append(os.path.join(root,aux))
+                        din.append(os.path.join(root,aux.decode('iso-8859-1')))
                     pass    
                 except Exception as e:
-                    print (e, 'acesso negado em: ', os.path.join(root,aux) )
+                    print (e, 'acesso negado em: ', os.path.join(root,aux.decode('iso-8859-1')) )
                     pass
                 
             #Se encontrar o what no caminho do arquivo, grava o caminho na lista d
             if fnmatch(aux,kwargs['what']):
-                print (os.path.join(root,aux))
-                d.append(os.path.join(root,aux))
+                print (os.path.join(root,aux.decode('iso-8859-1')))
+                d.append(os.path.join(root,aux.decode('iso-8859-1')))
                 pass
             pass
         pass
@@ -260,11 +209,13 @@ def finder(**kwargs):
         with open(os.path.join(kwargs['where'],'index_fider.txt'),'w') as f:
             print('gravando arquivo em :' ,os.path.join(kwargs['where'],'index_fider.txt') )
             for aux in index:
-                f.write(aux + '\n')
+                f.write(aux.decode('iso-8859-1') + '\n')
                 pass
             f.close()
             pass
         pass
+    
+    
     return d,din
     
 #    import shutil as sh
@@ -274,6 +225,46 @@ def finder(**kwargs):
 
 #d = finder(where=r"c:\Google Drive",what='')
 #d,din = finder(where=r'C:\Google Drive\AMBIDADOS-Pasta online compartilhada\Dados Processados\Boia4_e_Boia10_historico',what='2016,10',index='',inside='')
+
+
+#%%
+    
+def mover(**kwargs):
+    import os
+#    from copy import deepcopy
+#    files = deepcopy(kwargs['what'])
+    temp = []
+    for aux in kwargs['what']:
+        try:
+            what = os.path.abspath(aux) #qual arquivo
+            where = kwargs['where'] + os.path.splitdrive(what)[1]
+            os.renames(what.decode('iso-8859-1'),where.decode('iso-8859-1'))
+        except Exception as e:
+#            print(e)
+#            print(what)
+            temp.append(what)
+    return temp
+#no mover, entre com uma lista no what e com um nome de pasta no where
+    
+#%%
+def compare(**kwargs)        :
+    import filecmp
+    
+    match = []
+    for aux1 in kwargs['list']:
+        for aux2 in kwargs['list']:
+            if filecmp.cmp(aux1,aux2):
+                match.append(aux1,aux2)
+                pass
+            pass
+        pass
+    return match
+
+
+#%%
+d,din = finder(where=r"C:\Google Drive\Teste2",what ="*([123456789]).*")
+notmoved = mover(what=d,where=r'C:\temp')
+compare(list=d)
 
 
 #%%
