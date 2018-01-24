@@ -247,7 +247,10 @@ def mover(**kwargs):
 #no mover, entre com uma lista no what e com um nome de pasta no where
     
 #%%
-def compare(**kwargs)        :
+def compare(**kwargs):
+# =============================================================================
+#     #### INCOMPLETO
+# =============================================================================
     import filecmp
     
     match = []
@@ -265,6 +268,88 @@ def compare(**kwargs)        :
 d,din = finder(where=r"C:\Google Drive\Teste2",what ="*([123456789]).*")
 notmoved = mover(what=d,where=r'C:\temp')
 compare(list=d)
+
+
+#%%
+            
+def listFiles(**kwargs):      
+    from fnmatch import fnmatch
+    print('lookup in: ',kwargs['where'])
+    
+    
+    dlist = []
+    for root,dirr,files in (os.walk(kwargs['where'])):
+        for aux in files:
+            if fnmatch(aux,kwargs['what']):
+                dlist.append(os.path.join(root,aux))
+                pass
+            pass            
+        pass
+    return dlist
+
+
+#%%
+def regexFinder(**kwargs):
+# =============================================================================
+# #### INCOMPLETO    
+# =============================================================================
+    
+    dtl = []
+    
+    for aux in nameA:
+        f = open(aux,'r')
+        d = f.read()
+        f.close()
+        
+        t = []
+        
+            
+        if len(t) < 2:
+            rec = re.compile('([/0-9;:]{19})[,;][/0-9;:]{19}[;,]([0-9.]{7,9})')
+            t = rec.findall(d)
+            if len(t) <> 0:
+                print('a1')
+                dt = pd.DataFrame(t)
+                dt.index = pd.to_datetime(dt[0],format='%d/%m/%Y;%H:%M:%S')
+                dt.columns = ['date','KP']
+                dtl.append(dt)
+            
+                
+        if len(t) < 2:
+            
+            rec = re.compile('([/0-9-: ]{16,19})[,;"]+[/0-9-:. ]+[,;"]+([0-9.]{1,9})')
+            t = rec.findall(d)
+            if len(t) <> 0:
+                print('a2')
+                dt = pd.DataFrame(t)
+                dt.index = pd.to_datetime(dt[0],format='%Y-%m-%d %H:%M:%S')
+                dt.columns = ['date','KP']
+                dtl.append(dt)
+            
+            
+        if len(t) < 2:
+            rec = re.compile('([/0-9-:; ]{16,19})[,;"]+[/0-9-:.; ]+[,;"]+([0-9.]{1,9})')
+            t = rec.findall(d)
+            if len(t) <> 0:    
+                print('a3')
+                dt = pd.DataFrame(t)
+                dt.index = pd.to_datetime(dt[0],format='%d/%m/%Y;%H:%M:%S')
+                dt.columns = ['date','KP']
+                dtl.append(dt)        
+            
+        if len(t) < 2:
+            sys.exit()
+        
+        else:    
+    #        da = da.append(pd.DataFrame(t,columns=['date','KP']))  
+            
+            pass
+        pass
+    
+    da = pd.concat(dtl)
+    da.KP = da.KP.astype(float)
+
+
 
 
 #%%
