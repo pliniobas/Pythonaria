@@ -272,10 +272,10 @@ compare(list=d)
 
 #%%
             
-def listFiles(**kwargs):      
+def filesList(**kwargs):      
     from fnmatch import fnmatch
     print('lookup in: ',kwargs['where'])
-    
+    print('lookup for: ',kwargs['what'])
     
     dlist = []
     for root,dirr,files in (os.walk(kwargs['where'])):
