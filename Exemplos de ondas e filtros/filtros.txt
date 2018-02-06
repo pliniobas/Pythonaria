@@ -1,0 +1,2 @@
+https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter
+https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.hanning.html#scipy.signal.hanning
