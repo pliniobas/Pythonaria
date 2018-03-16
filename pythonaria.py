@@ -571,8 +571,12 @@ if __name__ == '__main__':
     
     df.columns.name = 'lon'
     
+    
+    #No level da funcao xs('valor_indice',level='nome_coluna_do_indice'), se coloca o nome da coluna que nomeia o indice.
     df.xs('0',level='lat')['0'] #todos as profundidades da lat = 0 e lon = 0
     df.xs('5',level='prof')#todas as lat e lon da profundidade 5
+     
+    
     df1 = df.xs(slice('0','1'),level = 'prof')
 
 
